@@ -6,7 +6,7 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
       <div className="container-fluid">
-        <Link to="/user" className="navbar-brand">
+        <Link to="/" className="navbar-brand">
           MOSTRANS
         </Link>
         <button

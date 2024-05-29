@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import { useQuery, useLazyQuery, gql } from "@apollo/client";
 
 const CharacterContext = createContext();
@@ -16,7 +16,7 @@ const CHARACTERS_QUERY = gql`
 `;
 
 const CHARACTER_BY_ID_QUERY = gql`
-  query getCharacterById($id: ID!) {
+  query Character($id: ID!) {
     character(id: $id) {
       id
       name
@@ -36,44 +36,77 @@ const CHARACTER_BY_ID_QUERY = gql`
 `;
 
 const CharacterProvider = ({ children }) => {
-  const {
-    loading: loadingCharacters,
-    error: errorCharacters,
-    data: dataCharacters,
-  } = useQuery(CHARACTERS_QUERY);
-  const [
-    getCharacterById,
-    { loading: loadingCharacter, error: errorCharacter, data: dataCharacter },
-  ] = useLazyQuery(CHARACTER_BY_ID_QUERY);
+  const { loading, error, data } = useQuery(CHARACTERS_QUERY);
   const [characters, setCharacters] = useState([]);
   const [character, setCharacter] = useState(null);
+  const [loadingCharacter, setLoadingCharacter] = useState(false);
+  const [errorCharacter, setErrorCharacter] = useState(null);
+  const [locations, setLocations] = useState(() => {
+    const savedLocations = localStorage.getItem("locations");
+    return savedLocations ? JSON.parse(savedLocations) : {};
+  });
+  const [fetchCharacter, { data: characterData }] = useLazyQuery(
+    CHARACTER_BY_ID_QUERY
+  );
 
   useEffect(() => {
-    if (dataCharacters) {
-      setCharacters(dataCharacters.characters.results);
+    if (data) {
+      setCharacters(data.characters.results);
     }
-  }, [dataCharacters]);
+  }, [data]);
 
   useEffect(() => {
-    if (dataCharacter) {
-      setCharacter(dataCharacter.character);
+    if (characterData) {
+      setCharacter(characterData.character);
     }
-  }, [dataCharacter]);
+  }, [characterData]);
 
-  const fetchCharacterById = (id) => {
-    getCharacterById({ variables: { id } });
-  };
+  const fetchCharacterById = useCallback(
+    (id) => {
+      setLoadingCharacter(true);
+      fetchCharacter({ variables: { id } })
+        .then(() => setLoadingCharacter(false))
+        .catch((error) => {
+          setErrorCharacter(error);
+          setLoadingCharacter(false);
+        });
+    },
+    [fetchCharacter]
+  );
+
+  const assignCharacterToLocation = useCallback((character, locationName) => {
+    setLocations((prevLocations) => {
+      const newLocations = { ...prevLocations };
+      if (!newLocations[locationName]) {
+        newLocations[locationName] = [];
+      }
+      if (
+        !newLocations[locationName].some((char) => char.id === character.id)
+      ) {
+        Object.keys(newLocations).forEach((loc) => {
+          newLocations[loc] = newLocations[loc].filter(
+            (char) => char.id !== character.id
+          );
+        });
+        newLocations[locationName].push(character);
+      }
+      localStorage.setItem("locations", JSON.stringify(newLocations));
+      return newLocations;
+    });
+  }, []);
 
   return (
     <CharacterContext.Provider
       value={{
         characters,
         character,
-        loadingCharacters,
-        errorCharacters,
+        loading,
+        error,
         loadingCharacter,
         errorCharacter,
         fetchCharacterById,
+        assignCharacterToLocation,
+        locations,
       }}
     >
       {children}

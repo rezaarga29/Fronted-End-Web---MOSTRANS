@@ -1,16 +1,30 @@
-import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { CharacterContext } from "../context/CharacterContext";
 
 export default function DetailCharacter() {
   const { id } = useParams();
-  const { character, loadingCharacter, errorCharacter, fetchCharacterById } =
-    useContext(CharacterContext);
+  const navigate = useNavigate();
+  const {
+    character,
+    loadingCharacter,
+    errorCharacter,
+    fetchCharacterById,
+    assignCharacterToLocation,
+  } = useContext(CharacterContext);
+  const [locationName, setLocationName] = useState("");
 
-  // Memanggil fetchCharacterById hanya sekali saat komponen dimuat pertama kali
   useEffect(() => {
     fetchCharacterById(id);
-  }, []); // Gunakan array dependensi kosong untuk memastikan useEffect hanya dipanggil sekali
+  }, [id, fetchCharacterById]);
+
+  const handleAssign = () => {
+    if (locationName.trim()) {
+      assignCharacterToLocation(character, locationName);
+      setLocationName("");
+      navigate("/location");
+    }
+  };
 
   if (loadingCharacter) return <p>Loading...</p>;
   if (errorCharacter) return <p>Error: {errorCharacter.message}</p>;
@@ -55,9 +69,21 @@ export default function DetailCharacter() {
                 <p className="card-text" style={{ color: "white" }}>
                   Origin: {character.origin.name}
                 </p>
-                <p className="card-text" style={{ color: "white" }}>
-                  Location: {character.location.name}
-                </p>
+                <div className="mt-3">
+                  <input
+                    type="text"
+                    placeholder="Enter location name"
+                    value={locationName}
+                    onChange={(e) => setLocationName(e.target.value)}
+                    className="form-control"
+                  />
+                  <button
+                    onClick={handleAssign}
+                    className="btn btn-primary mt-2"
+                  >
+                    Assign to Location
+                  </button>
+                </div>
               </div>
             </div>
           </div>
