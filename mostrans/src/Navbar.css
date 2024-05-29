@@ -1,0 +1,25 @@
+.navbar-brand {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #04812a;
+}
+
+.nav-link {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  color: #04812a;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #94989c;
+}
+
+.navbar-toggler {
+  border-color: #04812a;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+}
