@@ -31,9 +31,12 @@ export default function DetailCharacter() {
 
   return (
     <div className="container mt-5">
+      <h1 className="my-4 text-center" style={{ fontSize: "5vw" }}>
+        Character Detail
+      </h1>
       {character && (
         <div
-          className="card mx-auto mb-3"
+          className="card mx-auto mb-3 border border-light"
           style={{
             maxWidth: "540px",
             backgroundColor: "rgba(255, 255, 255, 0.3)",

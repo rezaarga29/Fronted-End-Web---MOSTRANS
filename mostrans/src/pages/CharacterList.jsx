@@ -9,7 +9,7 @@ export default function CharacterList() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="container">
+    <div className="container mt-5">
       <h1 className="my-4 text-center" style={{ fontSize: "5vw" }}>
         List Character
       </h1>
@@ -21,7 +21,7 @@ export default function CharacterList() {
               className="card-link text-decoration-none"
             >
               <div
-                className="card h-100"
+                className="card h-100 border border-light"
                 style={{ backgroundColor: "rgba(255, 255, 255, 0.3)" }}
               >
                 <img
