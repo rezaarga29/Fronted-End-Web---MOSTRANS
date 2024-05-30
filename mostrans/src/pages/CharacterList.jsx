@@ -10,8 +10,10 @@ export default function CharacterList() {
 
   return (
     <div className="container">
-      <h1 className="my-4 text-center">List Character</h1>
-      <div className="row row-cols-1 row-cols-md-3 g-4">
+      <h1 className="my-4 text-center" style={{ fontSize: "5vw" }}>
+        List Character
+      </h1>
+      <div className="row row-cols-2 row-cols-md-3 g-4">
         {characters.map((character) => (
           <div key={character.id} className="col">
             <Link
@@ -30,7 +32,7 @@ export default function CharacterList() {
                 <div className="card-body">
                   <h5
                     className="card-title text-center"
-                    style={{ color: "white" }}
+                    style={{ color: "white", fontSize: "2.5vw" }}
                   >
                     {character.name}
                   </h5>
