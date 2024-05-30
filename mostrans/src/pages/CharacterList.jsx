@@ -11,7 +11,7 @@ export default function CharacterList() {
   return (
     <div className="container mt-5">
       <h1 className="my-4 text-center" style={{ fontSize: "5vw" }}>
-        List Character
+        Character List
       </h1>
       <div className="row row-cols-2 row-cols-md-3 g-4">
         {characters.map((character) => (

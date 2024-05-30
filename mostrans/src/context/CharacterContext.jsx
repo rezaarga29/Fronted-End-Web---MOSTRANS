@@ -27,9 +27,6 @@ const CHARACTER_BY_ID_QUERY = gql`
       origin {
         name
       }
-      location {
-        name
-      }
       image
     }
   }
